@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Hitster maison</title>
+  <meta name="theme-color" content="#14111f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Hitster">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+    <!-- Écran de configuration / connexion -->
+    <section id="screen-login" class="screen" hidden>
+      <div class="logo">🎵</div>
+      <h1>Hitster maison</h1>
+      <p class="muted">Connecte ton compte Spotify Premium pour commencer.</p>
+      <label class="field" id="client-id-field">
+        <span>Client ID de l'app Spotify</span>
+        <input id="client-id" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ex. 3f2a…">
+      </label>
+      <button id="btn-login" class="btn primary big">Se connecter à Spotify</button>
+      <details class="help">
+        <summary>Adresse de redirection à déclarer chez Spotify</summary>
+        <code id="redirect-uri"></code>
+      </details>
+    </section>
+
+    <!-- Écran principal -->
+    <section id="screen-main" class="screen" hidden>
+      <header class="topbar">
+        <span class="brand">Hitster</span>
+        <button id="btn-device" class="chip" title="Appareil de lecture">📱 <span id="device-name">Appareil</span></button>
+      </header>
+
+      <div id="idle" class="idle">
+        <div class="disc" id="disc"><div class="disc-hole"></div></div>
+        <p id="hint" class="muted">Scanne une carte pour lancer la musique.</p>
+      </div>
+
+      <div id="player" class="player" hidden>
+        <div class="time-row">
+          <span id="t-cur">0:00</span>
+          <span id="t-dur">0:00</span>
+        </div>
+        <input id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Position dans la chanson">
+        <div class="controls">
+          <button id="btn-back" class="btn round" aria-label="Reculer de 10 secondes">−10</button>
+          <button id="btn-play" class="btn round play" aria-label="Lecture / pause">▶</button>
+          <button id="btn-fwd" class="btn round" aria-label="Avancer de 10 secondes">+10</button>
+        </div>
+      </div>
+
+      <p id="message" class="message" hidden></p>
+
+      <button id="btn-scan" class="btn primary big scan">📷 Scanner une carte</button>
+      <button id="btn-logout" class="link">Se déconnecter</button>
+    </section>
+
+    <!-- Scanner -->
+    <section id="screen-scan" class="scanner" hidden>
+      <video id="video" playsinline muted></video>
+      <canvas id="canvas" hidden></canvas>
+      <div class="frame"></div>
+      <p class="scan-hint">Vise le QR code de la carte</p>
+      <button id="btn-cancel-scan" class="btn big cancel">Annuler</button>
+    </section>
+
+    <!-- Choix de l'appareil -->
+    <dialog id="dlg-devices">
+      <h2>Lire sur…</h2>
+      <p class="muted small">Ouvre l'app Spotify sur ce téléphone si elle n'apparaît pas, puis actualise.</p>
+      <ul id="device-list"></ul>
+      <div class="dlg-actions">
+        <a class="btn" href="spotify:" id="btn-open-spotify">Ouvrir Spotify</a>
+        <button class="btn" id="btn-refresh-devices">Actualiser</button>
+        <button class="btn primary" id="btn-close-devices">Fermer</button>
+      </div>
+    </dialog>
+  </main>
+
+  <script src="vendor/jsQR.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
