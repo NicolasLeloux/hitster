@@ -245,7 +245,8 @@
   const state = { loaded: false, playing: false, pos: 0, dur: 0, at: 0, dragging: false, trackId: null };
 
   function explain(e) {
-    if (e.status === 403) return "Spotify refuse la commande : un compte Premium est nécessaire (ou ce compte n'est pas autorisé dans l'app Spotify Developer).";
+    if (e.status === 403 && e.reason === "PREMIUM_REQUIRED") return "Spotify refuse la commande : un compte Premium est nécessaire.";
+    if (e.status === 403) return "Spotify a refusé la commande (" + (e.message || "403") + "). Réessaie dans un instant.";
     if (e.status === 404 || e.reason === "NO_ACTIVE_DEVICE") return "Aucun appareil Spotify actif. Ouvre l'app Spotify sur ce téléphone, puis réessaie.";
     if (e.status === 401) return "Session Spotify expirée, reconnecte-toi.";
     return "Erreur Spotify : " + (e.message || e);
@@ -291,6 +292,9 @@
 
   async function togglePlay() {
     if (!state.loaded) return;
+    // On part de l'état réel de Spotify : juste après un lancement, l'état local peut être en retard,
+    // et Spotify refuse (403) un « play » sur un morceau déjà en lecture ou une « pause » déjà en pause.
+    await poll();
     const was = state.playing;
     state.pos = currentPos();
     state.playing = !was;
@@ -300,6 +304,8 @@
       if (was) await api("PUT", "/me/player/pause" + devQ());
       else await api("PUT", "/me/player/play" + devQ());
     } catch (e) {
+      await poll();
+      if (e.status === 403 && state.playing === !was) return; // déjà dans l'état voulu
       state.playing = was;
       render();
       message(explain(e), "error", 6000);

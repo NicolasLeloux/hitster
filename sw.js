@@ -1,5 +1,5 @@
 // Cache minimal pour que l'app s'ouvre vite et s'installe sur l'écran d'accueil.
-const CACHE = "hitster-v2";
+const CACHE = "hitster-v3";
 const FILES = ["./", "index.html", "style.css", "app.js", "config.js", "vendor/jsQR.js", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png"];
 
 self.addEventListener("install", (e) => {
