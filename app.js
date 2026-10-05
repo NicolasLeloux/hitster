@@ -6,7 +6,8 @@
 
   const SCOPES = "user-read-playback-state user-modify-playback-state";
   const API = "https://api.spotify.com/v1";
-  const REDIRECT_URI = location.origin + location.pathname;
+  // Toujours la même adresse, que l'app soit ouverte via « / » ou « /index.html ».
+  const REDIRECT_URI = location.origin + location.pathname.replace(/index\.html$/, "");
   const LS = {
     clientId: "hitster.clientId",
     token: "hitster.token",
